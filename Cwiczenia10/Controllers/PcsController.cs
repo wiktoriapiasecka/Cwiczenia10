@@ -1,5 +1,6 @@
 using Cwiczenia10.Data;
 using Cwiczenia10.DTOs;
+using Cwiczenia10.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -88,5 +89,32 @@ public class PcsController : ControllerBase
         };
 
         return Ok(result);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> CreatePc([FromBody] UpsertPcDto dto)
+    {
+        var pc = new PC
+        {
+            Name = dto.Name,
+            Weight = dto.Weight,
+            Warranty = dto.Warranty,
+            CreatedAt = dto.CreatedAt,
+            Stock = dto.Stock
+        };
+
+        _context.PCs.Add(pc);
+
+        await _context.SaveChangesAsync();
+
+        return Created($"/api/pcs/{pc.Id}", new PcDto
+        {
+            Id = pc.Id,
+            Name = pc.Name,
+            Weight = pc.Weight,
+            Warranty = pc.Warranty,
+            CreatedAt = pc.CreatedAt,
+            Stock = pc.Stock
+        });
     }
 }
