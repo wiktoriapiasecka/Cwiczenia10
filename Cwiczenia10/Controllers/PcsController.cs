@@ -117,4 +117,38 @@ public class PcsController : ControllerBase
             Stock = pc.Stock
         });
     }
+    
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdatePc(int id, [FromBody] UpsertPcDto dto)
+    {
+        var pc = await _context.PCs.FirstOrDefaultAsync(pc => pc.Id == id);
+
+        if (pc == null)
+            return NotFound();
+
+        pc.Name = dto.Name;
+        pc.Weight = dto.Weight;
+        pc.Warranty = dto.Warranty;
+        pc.CreatedAt = dto.CreatedAt;
+        pc.Stock = dto.Stock;
+
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+    
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeletePc(int id)
+    {
+        var pc = await _context.PCs.FirstOrDefaultAsync(pc => pc.Id == id);
+
+        if (pc == null)
+            return NotFound();
+
+        _context.PCs.Remove(pc);
+
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 }
