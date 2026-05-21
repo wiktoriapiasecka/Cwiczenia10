@@ -3,4 +3,3 @@
 GET {{Cwiczenia10_HostAddress}}/api/pcs
 Accept: application/json
 
-###
